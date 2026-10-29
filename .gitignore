@@ -1,0 +1,10 @@
+
+# Keep large datasets on the local computer
+
+# Keep large datasets on the local computer
+CSV_files/
+
+
+
+# Keep local VS Code settings private
+.vscode/

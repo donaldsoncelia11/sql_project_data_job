@@ -1,0 +1,18 @@
+/* What Skills are associated with the highest average salary for Business Analysts?*/
+
+SELECT
+    --job_postings_fact. job_title,
+    Round (AVG(job_postings_fact. salary_year_avg), 0) as avg_salary,
+    skills_dim.skills
+FROM job_postings_fact
+INNER JOIN skills_job_dim ON skills_job_dim.job_id=job_postings_fact.job_id
+INNER JOIN skills_dim ON skills_dim.skill_id=skills_job_dim.skill_id
+
+    WHERE
+        job_title_short = 'Business Analyst'
+    AND    salary_year_avg IS NOT NULL
+    GROUP BY skills_dim.skills
+    HAVING
+    COUNT(DISTINCT job_postings_fact.job_id) >= 10 -- filters skills that are associated with at least 10 job postings
+order by avg_salary DESC                           -- Removes bias from job postings
+limit 100

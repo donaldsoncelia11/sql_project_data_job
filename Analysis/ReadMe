@@ -1,0 +1,234 @@
+# Introduction 
+Explore the job market specifically for Business Analysts! 
+This project explores the top-paying jobs, the most in-demand
+skills, and the skills that lead to the highest paying jobs for Business Analysts.
+
+[project_sql_folder](/SQL_PROJECT_DATA_JOBS/project_sql/)
+
+# Background 
+Driven by personal interest in the job market for Business Analysts as well as the necessary and optimal skills required for the job, this project pinpoints the top-paid and in-demand skills necessary, giving guidance for others interested in the field.
+
+The data for this analysis is from [Luke Barousse's SQL course](/https://sql.lukebarousse.com/#/workspace?hide_schema=1)
+
+The questions answered through the SQL queries were:
+
+    1. What are the top paying Business Analysts jobs?
+    2. What skills are required for these top paying jobs?
+    3. What skills are most in demand for Business Analysts?
+    4. Which skills are associated with higher salaries?
+    5. What are the most optimal skills to learn
+
+### Tools I Used
+
+In this project, I utilized a variety of tools to conduct my analysis:
+
+- **SQL** (Structured Query Language): Enabled me to interact with the database, extract insights, and answer my key questions through queries.
+- **PostgreSQL**: As the database management system, PostgreSQL allowed me to store, query, and manipulate the job posting data.
+- **Visual Studio Code:** This open-source administration and development platform helped me manage the database and execute SQL queries.
+
+
+### Analysis
+
+Each query for this project aimed at investigating specific aspects of the Business Analyst job market. Here’s how I approached each question:
+
+#### 1. Top Paying Jobs
+ This query is to identify the highest-paying roles for Business Analysts. Business Analyst positions are filtered by salary and location, focusing on remote jobs. This query highlights the high paying opportunities in the field.
+   
+```
+
+        SELECT
+            company_dim.name as company_name,
+            job_title,
+            job_location,
+            job_schedule_type,
+            job_work_from_home,
+            salary_year_avg,
+            job_posted_date
+
+        FROM
+            job_postings_fact
+        LEFT JOIN company_dim ON
+        job_postings_fact.company_id=company_dim.company_id
+
+        WHERE
+            job_location ='Anywhere' 
+        AND
+            job_title  Ilike '%Business Analyst%' 
+        AND
+            salary_year_avg is not NULL
+
+        ORDER BY salary_year_avg DESC
+            limit 10
+```
+
+#### 2. Top Paying Job Skills 
+This query answers what the top paying necessary skills for Business Analysts are. 
+
+
+``` WITH top_paying_jobs AS (
+    SELECT
+        --company_dim.name as company_name,
+        job_id,
+        job_title,
+        salary_year_avg,
+        job_location
+
+    FROM
+        job_postings_fact
+    LEFT JOIN company_dim ON job_postings_fact.company_id=company_dim.company_id
+    WHERE
+    job_location ='Anywhere' 
+    AND
+        job_title  Ilike '%Business Analyst%' 
+    AND
+        salary_year_avg is not NULL
+
+    ORDER BY salary_year_avg DESC
+    limit 10
+)
+select 
+        top_paying_jobs.job_id,
+        job_title,
+        salary_year_avg,
+        skills
+
+
+FROM
+    top_paying_jobs
+	INNER JOIN
+    skills_job_dim ON top_paying_jobs.job_id = skills_job_dim.job_id
+	INNER JOIN
+    skills_dim ON skills_job_dim.skill_id = skills_dim.skill_id
+
+ORDER BY 
+    salary_year_avg DESC
+
+limit 10
+
+```
+
+### 3. In demand skills
+
+This query helped identify the skills most frequently requested in job postings for Business Analysts, directing focus to areas with high demand.
+
+```
+SELECT
+  skills_dim.skills,
+  COUNT(skills_job_dim.job_id) AS demand_count
+  
+FROM
+  job_postings_fact
+  INNER JOIN
+    skills_job_dim ON job_postings_fact.job_id = skills_job_dim.job_id
+  INNER JOIN
+    skills_dim ON skills_job_dim.skill_id = skills_dim.skill_id
+WHERE
+    job_postings_fact.job_title Ilike '%Business Analyst%'  --Gives only job posts for Business Analysts
+AND 
+    job_postings_fact.salary_year_avg > 50000 -- Displays jobs that make over $50k
+
+GROUP BY
+  skills_dim.skills
+ORDER BY
+  demand_count DESC
+
+limit 5 
+```
+
+### 4. Skills that Pay the most
+
+This query show what skills are associated with the highest average salary for Business Analysts
+
+SELECT
+    --job_postings_fact. job_title,
+    Round (AVG(job_postings_fact. salary_year_avg), 0) as avg_salary,
+    skills_dim.skills
+FROM job_postings_fact
+INNER JOIN skills_job_dim ON skills_job_dim.job_id=job_postings_fact.job_id
+INNER JOIN skills_dim ON skills_dim.skill_id=skills_job_dim.skill_id
+```
+    WHERE
+        job_title_short = 'Business Analyst'
+    AND    salary_year_avg IS NOT NULL
+    GROUP BY skills_dim.skills
+    HAVING
+    COUNT(DISTINCT job_postings_fact.job_id) >= 10 
+    order by avg_salary DESC
+    limit 100
+```
+
+### 5. Most Optimal Skills
+This final querey shows clearly the skills that are in the highest demand and with the highest average salaries for Business Analysts 
+
+
+
+``` 
+-- Use Query #3 (but modified)
+WITH skills_demand AS (
+  SELECT
+    skills_dim.skill_id,
+		skills_dim.skills,
+    COUNT(skills_job_dim.job_id) AS demand_count
+  FROM
+    job_postings_fact
+	  INNER JOIN
+	    skills_job_dim ON job_postings_fact.job_id = skills_job_dim.job_id
+	  INNER JOIN
+	    skills_dim ON skills_job_dim.skill_id = skills_dim.skill_id
+  WHERE
+    job_postings_fact.job_title_short = 'Business Analyst'
+		AND job_postings_fact.salary_year_avg IS NOT NULL
+    AND job_postings_fact.job_work_from_home = True
+  GROUP BY
+    skills_dim.skill_id
+),
+-- Skills with high average salaries for Business Analyst roles
+-- Uses Query #4 
+average_salary AS (
+  SELECT
+    skills_job_dim.skill_id,
+    AVG(job_postings_fact.salary_year_avg) AS avg_salary
+  FROM
+    job_postings_fact
+	  INNER JOIN
+	    skills_job_dim ON job_postings_fact.job_id = skills_job_dim.job_id
+	  -- There's no INNER JOIN to skills_dim because we got rid of the skills_dim.name 
+  WHERE
+    job_postings_fact.job_title_short = 'Business Analyst'
+		AND job_postings_fact.salary_year_avg IS NOT NULL
+    AND job_postings_fact.job_work_from_home = True
+  GROUP BY
+    skills_job_dim.skill_id
+)
+-- Return high demand and high salaries for 10 skills 
+SELECT
+  skills_demand.skills,
+  skills_demand.demand_count,
+  ROUND(average_salary.avg_salary, 2) AS avg_salary --ROUND to 2 decimals 
+FROM
+  skills_demand
+	INNER JOIN
+	  average_salary ON skills_demand.skill_id = average_salary.skill_id
+-- WHERE demand_count > 10
+ORDER BY
+  demand_count DESC, 
+	avg_salary DESC
+LIMIT 10 --Limit 25
+; 
+```
+This project was first SQL project! WIth each aspect of the work I deepened my understanding of the SQL language and navigating the larger SQL server. I followed the project along with Luke Barousse's course and I really feel I gained tons of hands on experience. Excited for more projects!
+
+### **Insights**
+
+From the analysis, several general insights emerged:
+
+1. **Top-Paying Business Analysts Jobs**: The highest-paying jobs for Business analysts that allow remote work offer a wide range of salaries, the highest at $1 MILLION!
+2. **Skills for Top-Paying Jobs**: High-paying Business Analysts jobs require advanced proficiency in SQL, suggesting it’s a critical skill for earning a top salary.
+3. **Most In-Demand Skills**: SQL is also the most demanded skill in the Business Analysts job market, thus making it essential for job seekers.
+4. **Skills with Higher Salaries**: Specialized skills, such as hadoop and phoenix, are associated with the highest average salaries, indicating a premium on niche expertise.
+5. **Optimal Skills for Job Market Value**: SQL leads in demand and offers for a high average salary, positioning it as one of the most optimal skills for Business Analysts to learn to maximize their market value.
+
+
+
+
+

@@ -1,0 +1,28 @@
+/* What are the top paying Business Analyst jobs that are available remotely? 
+1. Includes specified values for specific role, NO NULL values
+2. Include the company name
+Why? Highlight top-paying opportunities for Business Analysts that are relevant to my location 
+*/
+
+SELECT
+    company_dim.name as company_name,
+    job_title,
+    job_location,
+    job_schedule_type,
+    job_work_from_home,
+    salary_year_avg,
+    job_posted_date
+
+FROM
+    job_postings_fact
+LEFT JOIN company_dim ON job_postings_fact.company_id=company_dim.company_id
+
+WHERE
+   job_location ='Anywhere' 
+AND
+    job_title  Ilike '%Business Analyst%' 
+AND
+    salary_year_avg is not NULL
+
+ORDER BY salary_year_avg DESC
+limit 10
