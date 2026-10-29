@@ -6,7 +6,7 @@ skills, and the skills that lead to the highest paying jobs for Business Analyst
 [project_sql_folder](/SQL_PROJECT_DATA_JOBS/project_sql/)
 
 # Background 
-Driven by personal interest in the job market for Business Analysts as well as the necessary and optimal skills required for the job, this project pinpoints the top-paid and in-demand skills necessary, giving guidance for others interested in the field.
+Driven by personal interest in the job market and necessary skills needed for Business Analysts, this project pinpoints the top-paid and in-demand skills necessary, giving guidance for others interested in the field.
 
 The data for this analysis is from [Luke Barousse's SQL course](/https://sql.lukebarousse.com/#/workspace?hide_schema=1)
 
