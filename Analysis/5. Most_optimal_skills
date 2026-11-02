@@ -12,7 +12,7 @@ WITH skills_demand AS (
 	  INNER JOIN
 	    skills_dim ON skills_job_dim.skill_id = skills_dim.skill_id
   WHERE
-    job_postings_fact.job_title_short = 'Business Analyst'
+    job_postings_fact.job_title Ilike '%Business%Analyst%'
 		AND job_postings_fact.salary_year_avg IS NOT NULL
     AND job_postings_fact.job_work_from_home = True
   GROUP BY
@@ -30,7 +30,7 @@ average_salary AS (
 	    skills_job_dim ON job_postings_fact.job_id = skills_job_dim.job_id
 	  -- There's no INNER JOIN to skills_dim because we got rid of the skills_dim.name 
   WHERE
-    job_postings_fact.job_title_short = 'Business Analyst'
+    job_postings_fact.job_title Ilike '%Business%Analyst%'
 		AND job_postings_fact.salary_year_avg IS NOT NULL
     AND job_postings_fact.job_work_from_home = True
   GROUP BY

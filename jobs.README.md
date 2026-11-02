@@ -179,7 +179,7 @@ FROM job_postings_fact
  
     **Business Analyst jobs pay higher salaries for applicants who know how to organize and manage the cloud infrastructure as well as understand the programs that allow collaboration through the business** 
 
-![Skills that pay the most](images\skills_avg_salary_all.png)
+![Highest paying skills](images\skills_avg_salary_all.png)
 *Table created via Excel Pivot table
 
 ---
@@ -252,7 +252,7 @@ LIMIT 10 --Limit 25
 
 - **Most optimal skills** are skills that are in high demand AND offer high salaries. The skills for these jobs are SQL, Tableau, and excel. These skills are listed in over 20 job postings each and have an average salary of over $100k
 
-![Most Optimal skills](images\optimal_skills_table.png)
+![Most Optimal skill](images\optimal_skills_table.png)
 ---
 
 
