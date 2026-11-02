@@ -6,6 +6,7 @@ Why? Highlight top-paying opportunities for Business Analysts that are relevant 
 
 SELECT
     company_dim.name as company_name,
+    job_id
     job_title,
     job_location,
     job_schedule_type,
@@ -20,7 +21,8 @@ LEFT JOIN company_dim ON job_postings_fact.company_id=company_dim.company_id
 WHERE
    job_location ='Anywhere' 
 AND
-    job_title  Ilike '%Business Analyst%' 
+    job_title  Ilike '%Business%Analyst%' 
+    
 AND
     salary_year_avg is not NULL
 

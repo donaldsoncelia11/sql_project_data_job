@@ -1,10 +1,13 @@
+
+
 /* What are the top paying skills for Business Analysts? 
 - Use the results from the previous top paying Business Analyst query
 - Add the specific skills required for these roles 
 why? Show the required skills necessary for the top paying Business Analyst */
 
+-- Gathers top 10 paying Business Analyst jobs
 WITH top_paying_jobs AS (
-    SELECT
+    SELECT  
         --company_dim.name as company_name,
         job_id,
         job_title,
@@ -13,11 +16,11 @@ WITH top_paying_jobs AS (
 
     FROM
         job_postings_fact
-    LEFT JOIN company_dim ON job_postings_fact.company_id=company_dim.company_id
+    --LEFT JOIN company_dim ON job_postings_fact.company_id=company_dim.company_id
     WHERE
     job_location ='Anywhere' 
     AND
-        job_title  Ilike '%Business Analyst%' 
+        job_title  Ilike '%Business%Analyst%' 
     AND
         salary_year_avg is not NULL
 
@@ -29,10 +32,11 @@ select
         job_title,
         salary_year_avg,
         skills
+       
 
 
 FROM
-    top_paying_jobs
+    top_paying_jobs 
 	INNER JOIN
     skills_job_dim ON top_paying_jobs.job_id = skills_job_dim.job_id
 	INNER JOIN
@@ -41,4 +45,3 @@ FROM
 ORDER BY 
     salary_year_avg DESC
 
-limit 10
