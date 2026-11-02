@@ -179,7 +179,8 @@ FROM job_postings_fact
  
     **Business Analyst jobs pay higher salaries for applicants who know how to organize and manage the cloud infrastructure as well as understand the programs that allow collaboration through the business** 
 
-![Highest paying skills](images\skills_avg_salary_all.png)
+![Highest paying skills](images\skill_average_salary_all.png)
+
 *Table created via Excel Pivot table
 
 ---
