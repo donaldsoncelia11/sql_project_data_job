@@ -253,7 +253,7 @@ LIMIT 10 --Limit 25
 
 - **Most optimal skills** are skills that are in high demand AND offer high salaries. The skills for these jobs are SQL, Tableau, and excel. These skills are listed in over 20 job postings each and have an average salary of over $100k
 
-![Most Optimal skill](images\optimal_skills_table.png)
+![Most Optimal Skills](images/optimal_table.png)
 ---
 
 
