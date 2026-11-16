@@ -35,23 +35,26 @@ Each query for this project aimed at investigating specific aspects of the Busin
  This query is to identify the highest-paying roles for Business Analysts. Business Analyst positions are filtered by salary and location, focusing on remote jobs. This query highlights the high paying opportunities in the field.
    
    
+````
 
-``` 
-            job_postings_fact
-        LEFT JOIN company_dim ON
-        job_postings_fact.company_id=company_dim.company_id
+SELECT
+    job_title,
+    salary_year_avg
+FROM
+    job_postings_fact
+LEFT JOIN company_dim ON job_postings_fact.company_id=company_dim.company_id
 
-        WHERE
-            job_location ='Anywhere' 
-        AND
-            job_title  Ilike '%Business%Analyst%'
-  ' 
-        AND
-            salary_year_avg is not NULL
+WHERE
+   job_location ='Anywhere' 
+AND
+    job_title  Ilike '%Business%Analyst%' 
+    
+AND
+    salary_year_avg is not NULL
 
-        ORDER BY salary_year_avg DESC
-            limit 10
-```
+ORDER BY salary_year_avg DESC
+limit 10
+````
 
 ### Findings from analysis 
 - The top highest paying jobs for Business Analysts that work remotely is $162,500
@@ -110,6 +113,7 @@ ORDER BY
 ```
 ### Findings from Analysis
   - **The highest salaried job postings for Business Analysts most often requires skills in SQL, Excel, and Tableau** 
+  - Table shows: of the top 10 highest paid job postings for Business Analysts **SQL was listed as a necessary skill 8 times**, **Excel and Tableau were listed 6 times**
   
 
 ![Top skills for Business Analysts!](images/top_skills_business_analysts.png)
@@ -163,9 +167,7 @@ FROM job_postings_fact
   INNER JOIN skills_dim ON skills_dim.skill_id=skills_job_dim.skill_id
 
     WHERE
-        job_title_short = 'Business Analyst'
-    AND    salary_year_avg IS NOT NULL
-    GROUP BY skills_dim.skills
+        job_title_short ILIKE '%Business%Analyst%
     HAVING
     COUNT(DISTINCT job_postings_fact.job_id) >= 10 
     order by avg_salary DESC
