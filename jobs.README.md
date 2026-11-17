@@ -38,7 +38,7 @@ Each query for this project aimed at investigating specific aspects of the Busin
 ````
 SELECT
     company_dim.name as company_name,
-    job_id
+    job_id,
     job_title,
     job_location,
     job_schedule_type,
@@ -90,7 +90,7 @@ This query answers what the top paying necessary skills for Business Analysts ar
 
     FROM
         job_postings_fact
-    --LEFT JOIN company_dim ON job_postings_fact.company_id=company_dim.company_id
+    LEFT JOIN company_dim ON job_postings_fact.company_id=company_dim.company_id
     WHERE
     job_location ='Anywhere' 
     AND
