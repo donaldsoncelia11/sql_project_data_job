@@ -36,10 +36,16 @@ Each query for this project aimed at investigating specific aspects of the Busin
    
    
 ````
-
 SELECT
+    company_dim.name as company_name,
+    job_id
     job_title,
-    salary_year_avg
+    job_location,
+    job_schedule_type,
+    job_work_from_home,
+    salary_year_avg,
+    job_posted_date
+
 FROM
     job_postings_fact
 LEFT JOIN company_dim ON job_postings_fact.company_id=company_dim.company_id
@@ -54,6 +60,7 @@ AND
 
 ORDER BY salary_year_avg DESC
 limit 10
+
 ````
 
 ### Findings from analysis 
